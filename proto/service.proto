@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package service;
+
+service DeviceStateService {
+    rpc GetDeviceState(DeviceStateRequest) returns (DeviceStateResponse) {}
+}
+
+message DeviceStateRequest {
+    string device_id = 1;
+}
+
+enum DeviceState {
+    STARTED = 0;
+    STOPPED = 1;
+}
+
+message DeviceStateResponse {
+    DeviceState state = 1;
+    uint64 timestamp  = 2;
+}
