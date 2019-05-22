@@ -10,12 +10,8 @@ message DeviceStateRequest {
     string device_id = 1;
 }
 
-enum DeviceStatus {
-    STARTED = 0;
-    STOPPED = 1;
-}
-
 message DeviceStateResponse {
-    DeviceStatus state = 1;
+    // TODO: use enum?
+    string state = 1;
     uint64 timestamp  = 2;
 }

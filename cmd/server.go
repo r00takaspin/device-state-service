@@ -1,16 +1,25 @@
 package cmd
 
 import (
-	"fmt"
-
+	"device-state-service/internal/service"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
-// serverCmd represents the server command
+const (
+	Topic = "devices/+/state"
+	BrokerAddress = "tcp://localhost:1883"
+	)
+
+
 var serverCmd = &cobra.Command{
 	Use: "server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		logrus.Info("starting server")
+
+		if err := service.StartServer(Topic, BrokerAddress, logrus.New());err!=nil {
+			logrus.Fatalf("server start failed: %v", err)
+		}
 	},
 }
 

@@ -1,7 +1,6 @@
 package service
 
 import (
-	service "device-state-service/grpc_api"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"sync"
@@ -12,7 +11,7 @@ var ErrDeviceNotFound = status.Error(codes.NotFound, "device not found")
 
 type DeviceState struct {
 	timestamp int64
-	status service.DeviceStatus
+	status string
 }
 
 func (ds *DeviceState) Copy() *DeviceState {
@@ -40,7 +39,7 @@ func (s *State) GetStatus(deviceID string) (*DeviceState, error) {
 	return nil, ErrDeviceNotFound
 }
 
-func (s *State) SetStatus(deviceID string, status service.DeviceStatus) {
+func (s *State) SetStatus(deviceID string, status string) {
 	s.m.Lock()
 	s.devices[deviceID] = &DeviceState{timestamp: time.Now().UnixNano(), status: status}
 	s.m.Unlock()
