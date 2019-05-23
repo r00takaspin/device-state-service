@@ -14,10 +14,10 @@ func TestState_GetStatus(t *testing.T) {
 	deviceID1 := uuid.New().String()
 
 	s.SetStatus(deviceID1, "STARTED")
-	res, err := s.GetStatus(deviceID1)
+	res1, err := s.GetStatus(deviceID1)
 	r.NoError(err)
-	r.Equal(res.status, "STARTED")
+	r.Equal(res1.status, "STARTED")
 
-	res, err = s.GetStatus(uuid.New().String())
+	_, err = s.GetStatus(uuid.New().String())
 	r.EqualValues(err, ErrDeviceNotFound)
 }
