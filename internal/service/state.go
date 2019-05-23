@@ -11,7 +11,7 @@ var ErrDeviceNotFound = status.Error(codes.NotFound, "device not found")
 
 type DeviceState struct {
 	timestamp int64
-	status string
+	status    string
 }
 
 func (ds *DeviceState) Copy() *DeviceState {

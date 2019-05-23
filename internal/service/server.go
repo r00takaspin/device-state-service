@@ -11,12 +11,6 @@ import (
 	"syscall"
 )
 
-type Server struct {
-	state *State
-
-	logger *logrus.Logger
-}
-
 type StatusRequest struct {
 	State string
 }
@@ -38,7 +32,7 @@ func StartServer(topic string, brokerAddr string, logger *logrus.Logger) error {
 	client := mqtt.NewClient(opts)
 
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		s.logger.Error("connect to mqtt: %s", token.Error())
+		logger.Error("connect to mqtt: %s", token.Error())
 		return token.Error()
 	}
 
@@ -53,6 +47,12 @@ func StartServer(topic string, brokerAddr string, logger *logrus.Logger) error {
 		logger.Warnf("SIG: %s", sig)
 		done <- true
 	}()
+
+	//TODO: graceful shutdown
+	_, err := StartGrpcServer(state, logger)
+	if err != nil {
+		logger.Panicf("start grpc server", err)
+	}
 
 	logger.Println("awaiting signal")
 	<-done
