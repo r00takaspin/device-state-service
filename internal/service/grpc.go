@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -16,10 +17,9 @@ type Server struct {
 	logger *logrus.Logger
 }
 
-func StartGrpcServer(state *State, logger *logrus.Logger) (*Server, error) {
+func StartGrpcServer(state *State, port int, logger *logrus.Logger) (*Server, error) {
 	srv := &Server{state: state, logger: logger}
-	//start on random port
-	lis, err := net.Listen("tcp", ":0")
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return nil, err
 	}

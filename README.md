@@ -17,7 +17,7 @@ docker run -it -p 1883:1883 -p 9001:9001 eclipse-mosquitto
 protoc -I proto/ proto/service.proto --go_out=plugins=grpc:grpc_api/
 
 # build and run server in separate terminal
-go build && ./device-state-service server
+go build && ./device-state-service server --b localhost:1883
 
 # publish state message
 ./mqttcli_darwin_amd64.dms pub -t "devices/123/state" -m "{\"state\":\"STARTED\"}"

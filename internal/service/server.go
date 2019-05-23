@@ -19,7 +19,7 @@ func (sr *StatusRequest) Valid() bool {
 	return sr.State != ""
 }
 
-func StartServer(topic string, brokerAddr string, logger *logrus.Logger) error {
+func StartServer(topic string, brokerAddr string, port int, logger *logrus.Logger) error {
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
 
@@ -27,20 +27,19 @@ func StartServer(topic string, brokerAddr string, logger *logrus.Logger) error {
 
 	state := NewState()
 	s := &Server{state: state, logger: logger}
-
-	opts := mqtt.NewClientOptions().AddBroker(brokerAddr)
-	client := mqtt.NewClient(opts)
+	client := mqtt.NewClient(mqtt.NewClientOptions().AddBroker(brokerAddr))
 
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		logger.Error("connect to mqtt: %s", token.Error())
 		return token.Error()
 	}
+
+	logger.Infof("successfully connected to broker: %v", brokerAddr)
 
 	defer client.Disconnect(0)
 
 	go startSubscriber(topic, client, s.state, s.logger)
 
-	_, err := StartGrpcServer(state, logger)
+	_, err := StartGrpcServer(state, port, logger)
 	if err != nil {
 		logger.Panicf("start grpc server", err)
 	}
