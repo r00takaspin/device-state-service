@@ -1,9 +1,10 @@
 package service
 
 import (
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestState_GetStatus(t *testing.T) {

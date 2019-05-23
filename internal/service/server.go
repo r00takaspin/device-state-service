@@ -2,13 +2,14 @@ package service
 
 import (
 	"encoding/json"
-	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type StatusRequest struct {
@@ -41,7 +42,7 @@ func StartServer(topic string, brokerAddr string, port int, logger *logrus.Logge
 
 	_, err := StartGrpcServer(state, port, logger)
 	if err != nil {
-		logger.Panicf("start grpc server", err)
+		logger.Panicf("start grpc server: %v", err)
 	}
 
 	go func() {
@@ -81,7 +82,7 @@ func startSubscriber(topic string, client mqtt.Client, state *State, logger *log
 		state.SetStatus(deviceID, jsonReq.State)
 
 	}); token.Wait() && token.Error() != nil {
-		logger.Error("subscription error %s", token.Error())
+		logger.Errorf("subscription error %s", token.Error())
 	}
 }
 

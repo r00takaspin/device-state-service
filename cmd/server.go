@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"device-state-service/internal/service"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )

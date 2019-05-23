@@ -135,6 +135,17 @@
   version = "v1.0.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:346be233f20fec4e04844bebe115dbe30d5d9cd3c4273440d71c0c0fde8e7feb"
+  name = "github.com/r00takaspin/device-state-service"
+  packages = [
+    "grpc_api",
+    "internal/service",
+  ]
+  pruneopts = "UT"
+  revision = "5f4baba874dc7f8a273b124685f5703f95b61a84"
+
+[[projects]]
   digest = "1:04457f9f6f3ffc5fea48e71d62f2ca256637dee0a04d710288e27e05c8b41976"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
@@ -324,6 +335,8 @@
     "github.com/google/uuid",
     "github.com/mitchellh/go-homedir",
     "github.com/pkg/errors",
+    "github.com/r00takaspin/device-state-service/grpc_api",
+    "github.com/r00takaspin/device-state-service/internal/service",
     "github.com/sirupsen/logrus",
     "github.com/spf13/cobra",
     "github.com/spf13/viper",

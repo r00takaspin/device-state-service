@@ -2,18 +2,17 @@ package service
 
 import (
 	"context"
+	grpc_api "device-state-service/grpc_api"
 	"fmt"
+	"net"
+
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net"
-
-	service "device-state-service/grpc_api"
 )
 
 type Server struct {
-	state *State
-
+	state  *State
 	logger *logrus.Logger
 }
 
@@ -23,8 +22,9 @@ func StartGrpcServer(state *State, port int, logger *logrus.Logger) (*Server, er
 	if err != nil {
 		return nil, err
 	}
+
 	s := grpc.NewServer()
-	service.RegisterDeviceStateServiceServer(s, srv)
+	grpc_api.RegisterDeviceStateServiceServer(s, srv)
 
 	logger.Infof("grpc server listening on: %s", lis.Addr().String())
 
@@ -38,11 +38,11 @@ func StartGrpcServer(state *State, port int, logger *logrus.Logger) (*Server, er
 	return srv, nil
 }
 
-func (s *Server) GetDeviceState(ctx context.Context, req *service.DeviceStateRequest) (*service.DeviceStateResponse, error) {
+func (s *Server) GetDeviceState(ctx context.Context, req *grpc_api.DeviceStateRequest) (*grpc_api.DeviceStateResponse, error) {
 	deviceState, err := s.state.GetStatus(req.DeviceId)
 	if err != nil {
 		return nil, err
 	}
 
-	return &service.DeviceStateResponse{State: deviceState.status, Timestamp: deviceState.timestamp}, nil
+	return &grpc_api.DeviceStateResponse{State: deviceState.status, Timestamp: deviceState.timestamp}, nil
 }

@@ -1,10 +1,11 @@
 package service
 
 import (
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"sync"
 	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 var ErrDeviceNotFound = status.Error(codes.NotFound, "device not found")
