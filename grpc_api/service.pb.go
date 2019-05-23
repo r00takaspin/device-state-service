@@ -62,7 +62,6 @@ func (m *DeviceStateRequest) GetDeviceId() string {
 }
 
 type DeviceStateResponse struct {
-	// TODO: use enum?
 	State                string   `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`
 	Timestamp            int64    `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`

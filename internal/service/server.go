@@ -36,23 +36,20 @@ func StartServer(topic string, brokerAddr string, logger *logrus.Logger) error {
 		return token.Error()
 	}
 
-	// TODO: check how to disconnect correctly
-	// TODO: graceful shutdown
 	defer client.Disconnect(0)
 
 	go startSubscriber(topic, client, s.state, s.logger)
+
+	_, err := StartGrpcServer(state, logger)
+	if err != nil {
+		logger.Panicf("start grpc server", err)
+	}
 
 	go func() {
 		sig := <-sigs
 		logger.Warnf("SIG: %s", sig)
 		done <- true
 	}()
-
-	//TODO: graceful shutdown
-	_, err := StartGrpcServer(state, logger)
-	if err != nil {
-		logger.Panicf("start grpc server", err)
-	}
 
 	logger.Println("awaiting signal")
 	<-done
@@ -70,8 +67,6 @@ func startSubscriber(topic string, client mqtt.Client, state *State, logger *log
 			logger.Errorf("wrong topic: %s", err)
 			return
 		}
-
-		//TODO: add device id validation, for example check uuid
 
 		jsonReq := &StatusRequest{}
 		if err := json.Unmarshal(msg.Payload(), jsonReq); err != nil {

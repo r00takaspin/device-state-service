@@ -18,6 +18,7 @@ type Server struct {
 
 func StartGrpcServer(state *State, logger *logrus.Logger) (*Server, error) {
 	srv := &Server{state: state, logger: logger}
+	//start on random port
 	lis, err := net.Listen("tcp", ":0")
 	if err != nil {
 		return nil, err
@@ -28,15 +29,13 @@ func StartGrpcServer(state *State, logger *logrus.Logger) (*Server, error) {
 	logger.Infof("grpc server listening on: %s", lis.Addr().String())
 
 	reflection.Register(s)
-	if err := s.Serve(lis); err != nil {
-		return nil, err
-	}
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			panic("cannot start grpc server")
+		}
+	}()
 
 	return srv, nil
-}
-
-func (s *Server) Stop() {
-	//TODO: stop
 }
 
 func (s *Server) GetDeviceState(ctx context.Context, req *service.DeviceStateRequest) (*service.DeviceStateResponse, error) {
