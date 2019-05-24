@@ -62,6 +62,8 @@ func startSubscriber(topic string, brokerAddr string, state *State, logger *logr
 		logger.Errorf("connect to broker: %v", token.Error())
 	}
 
+	defer client.Disconnect(0)
+
 	logger.Infof("starting listening topic: %s", topic)
 
 	if token := client.Subscribe(topic, 0, func(client mqtt.Client, msg mqtt.Message) {
